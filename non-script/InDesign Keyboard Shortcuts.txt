@@ -1,0 +1,7 @@
+PACmd: EditText.jsx --- Default: F2
+PACmd: ExtendScope.jsx --- Default: Insert, Text: Insert
+PACmd: GetScopeDefault.jsx --- Default: Shift+Ctrl+Alt+=
+PACmd: GetScopeText.jsx --- Text: Shift+Ctrl+Alt+=
+PACmd: NextCol.jsx --- Text: Page Down, Default: Page Down
+PACmd: NextPageForAdjust.jsx --- Default: Shift+Ctrl+Alt+-, Text: Shift+Ctrl+Alt+-
+PACmd: PrevCol.jsx --- Text: Page Up, Default: Page Up
