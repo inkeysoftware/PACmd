@@ -1,10 +1,7 @@
 ; PA Commander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-; Version History
-Version = 0.0.4
-; 0.0.3   2022-10-28 
-
+Version = 0.0.5
 
 ;========================== 
 ; Initialization
@@ -28,8 +25,9 @@ global lastMods
 ; and, if there is an active window, it's one of them:
 #If (WinExist(IdWin) and WinExist(PaWin)) and (WinActive(IdWin) or WinActive(PaWin) or NoWinActive())
 
-; Ins - reserved for Extend scope
-; F1 reserved for Find Best Fit 
+; Ins - InDesign: Toggle Page/Col
+; Esc - InDesign: Toggle Text/Col
+; F1 reserved for "Find Best Fit" in a future version of PA
 
 ;-------------------------- F2: Shrink
 *F2::EnableDoubleTap("Shrink")

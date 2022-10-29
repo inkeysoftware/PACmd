@@ -21,6 +21,30 @@ function main() {
 		selFrame = getBodyFrame(app.activeWindow.activePage, 1);
 	}
 
-	app.activeWindow.select(selFrame.lines.middleItem());
+	//app.activeWindow.select(selFrame.paragraphs.middleItem());
+	
+	
+	
+	
+	
+		// p = app.selection[0].insertionPoints[0];
+	nextp = selFrame.paragraphs.middleItem();
+	// if (nextp == null) {
+		// return; // end of story
+	// }
+	nextIp = nextp.insertionPoints[0];
+	app.activeWindow.activePage = nextIp.parentTextFrames[0].parentPage;
+	app.activeWindow.select(nextp);
+
+	// If there had been any extended selection, wipe it out.
+	selEnd = getPersistentNum("pac:selEnd");
+	if (selEnd) {
+		unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
+		selEnd = setPersistentNum("pac:selEnd", 0);
+	}
+
+	$.sleep(100);
+	app.activeWindow.select(nextIp);
+
 }
 
