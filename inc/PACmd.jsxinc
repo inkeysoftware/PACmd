@@ -1,0 +1,120 @@
+//===================================================
+
+// Functions common to PA Commander scripts
+
+// Temporarily assume we are always dealing with 2-column documents.
+function colCt() {
+	return 2;
+}
+
+// getBodyFrame() - Given a Page object and a column number, return the TextFrame indicated by the column number.
+function getBodyFrame(pg, colNum) {
+	findLbl = "body" + colNum.toString();
+	for (ii=0; ii<pg.textFrames.length; ii++) {
+		if (pg.textFrames[ii].label.substring(5,0) == findLbl) {
+			return pg.textFrames[ii];
+		}
+	}
+	return null;
+}
+
+function pageByIdx(idx) {
+	return  Math.floor((idx+colCt()-1)/colCt())-1;;
+}
+function colByIdx(idx) {
+	return (idx+1) % colCt() + 1;
+}
+function idxByPgCol(pgNum, colNum) {
+	return (pgNum) * colCt() + colNum;
+}
+function idxLastCol() {
+	return idxByPgCol(app.activeWindow.parent.pages.length-1, colCt());
+}
+
+function getBodyFrameByIdx(idx) {
+	try {
+		var pgNum = pageByIdx(idx);
+		var colNum = colByIdx(idx);
+		var pg = app.activeWindow.parent.pages[pgNum];
+		return getBodyFrame(pg, colNum);
+	} catch (err) {
+		alert("Failed to getBodyFrameByIdx(" + idx.toString() + ")"); 
+		return null;
+	}
+}
+
+// Send a message to PA Commander
+function Respond2PA(cmd) {
+	const cmdFilebase = Folder.temp + "/ID2PAresponse";
+	var file = new File(cmdFilebase + ".tmp");
+	file.open('w');
+	file.write(cmd);
+	file.close();
+	file.rename(cmdFilebase + ".txt");
+}
+
+function getFrameIdx(colFrame) {
+	try {
+		var lbl = colFrame.label;
+		var m = lbl.match(/body(\d)/);
+		var colNum = parseInt(m[1]);
+		var pgNum = colFrame.parentPage.documentOffset;
+		return idxByPgCol(pgNum, colNum);
+	} catch (err) {
+		return 0;
+	}
+}
+
+function getCurColFrame() {
+    for (ii = 0; ii < app.selection.length; ii++) {  // for each item in selection
+        if ((app.selection[ii].constructor.name == "TextFrame") && (app.selection[ii].label.substring(4,0) == "body")) { // if item is a body textframe
+            return app.selection[ii];
+        } else {
+            try {
+                parentFrame = app.selection[ii].parentTextFrames[0]; // if item has a parent textframe
+				if (parentFrame.label.substring(4,0) == "body") {
+					return parentFrame;
+				}
+            } catch (err) {
+            }
+        }
+	}
+	return null;
+}
+
+function unhighlightRange(start, end) {
+	step = (end > start) ? 1 : -1;
+	for (jj=start; jj != end + step; jj = jj + step) {
+		unhiliteCol(getBodyFrameByIdx(jj));
+	}
+}
+
+function getPersistentNum(lbl) {
+	try {
+		str = app.activeDocument.extractLabel(lbl);
+		if (str.length == 0) {
+			return 0;
+		}
+		return parseInt(str);
+	} catch (err) {
+		return 0;
+	}
+}
+
+function setPersistentNum(lbl, num) {
+	app.activeDocument.insertLabel(lbl, num.toString());
+	return num;
+}
+
+function unhiliteCol(colFrame) {
+	colFrame.strokeWeight = 0;
+}
+
+function hiliteCol(colFrame) {
+	colFrame.strokeWeight = 5;
+	colFrame.strokeAlignment = StrokeAlignment.OUTSIDE_ALIGNMENT;
+	colFrame.strokeColor = "C=75 M=5 Y=100 K=0";
+	colFrame.strokeType = "White Diamond";
+}
+
+//===================================================

@@ -1,51 +1,38 @@
 // Run script in a way that a single Undo step undoes all its changes
 app.doScript(main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT, "PrevCol"); 
 
-// getBodyFrame() - Given a Page and a column number, return the TextFrame indicated by the column number.
-function getBodyFrame(pg, colNum) {
-	// Temporary cheat: Using index rather than label. This probably won't work if intro goes onto second page.
-	// Index numbers are different on the first page. 
-	return pg.textFrames.item((pg.documentOffset == 0 ? 5 : 3) - colNum);
-}
+#include "inc/PACmd.jsxinc"
 
 // Main function: 
 function main() {
-    if (app.selection.length == 0) { // Nothing selected, so select 1st col
+	// If there had been any extended selection, wipe it out.
+	selEnd = getPersistentNum("pac:selEnd");
+	if (selEnd) {
+		unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
+		selEnd = setPersistentNum("pac:selEnd", 0);
+	}
+	
+	curFrame = getCurColFrame();
+	if (curFrame == null) {  // No column body frame selected, so select 1st col
 		app.activeWindow.select(getBodyFrame(app.activeWindow.activePage, 1));
         return;  
     }
+	unhiliteCol(curFrame);  // shouldn't be necessary, if we didn't mess up something earlier
+	
+	iCurCol = getFrameIdx(curFrame);
+	if (iCurCol == 1) {
+		return;  // We can't extend back any further.
+	}
+	var pgNum = pageByIdx(iCurCol);
+	var colNum = colByIdx(iCurCol);
 
-    for(ii = 0; ii < app.selection.length; ii++) {  // for each item in selection
-        var selFrame = null;
-        if ((app.selection[ii].constructor.name == "TextFrame") && (app.selection[ii].label.substring(4,0) == "body")) { // if item is a body textframe
-            selFrame = app.selection[ii];
-        } else {
-            try {
-                selFrame = app.selection[ii].parentTextFrames[0]; // if item has a parent textframe
-            } catch (err) {
-            }
-        }
-        if (selFrame == null || selFrame.label.substring(4,0) != "body") {     // e.g. Illustration group is selected
-			app.activeWindow.select(getBodyFrame(app.activeWindow.activePage, 1));
-			return;  // Invalid selection, so select 1st col
-        } else {
-			var lbl = selFrame.label;
-			var pg = selFrame.parentPage;
-			try {
-				var m = lbl.match(/body(\d)/);
-				var col = parseInt(m[1]);
-				if (col == 1) {
-					newPg = app.activeWindow.parent.pages[pg.documentOffset-1];
-					app.activeWindow.activePage = newPg;
-					app.activeWindow.select(getBodyFrame(newPg, 2));
-				} else {
-					app.activeWindow.activePage = pg;
-					app.activeWindow.select(getBodyFrame(pg, 1));
-				}
-			} catch (err) {
-				app.activeWindow.select(getBodyFrame(app.activeWindow.activePage, 1));
-			}
-        }
-    }
+	if (colNum == 1) {  // if currently first column, move back to last column of prev page
+		newPg = app.activeWindow.parent.pages[pgNum - 1];
+		app.activeWindow.activePage = newPg;
+		app.activeWindow.select(getBodyFrame(newPg, colCt()));
+	} else {  // move to first column of current page
+		app.activeWindow.activePage = curFrame.parentPage;  // because sometimes it had the selected frame but was not actually active
+		app.activeWindow.select(getBodyFrame(curFrame.parentPage, 1));
+	}
 }
 

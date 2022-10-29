@@ -2,8 +2,8 @@
 ;======================================================================
 
 ; Version History
-Version = 0.0.2
-; 0.0.2   2022-10-27 
+Version = 0.0.4
+; 0.0.3   2022-10-28 
 
 
 ;========================== 
@@ -29,25 +29,28 @@ global lastMods
 #If (WinExist(IdWin) and WinExist(PaWin)) and (WinActive(IdWin) or WinActive(PaWin) or NoWinActive())
 
 ; Ins - reserved for Extend scope
-; F1 reserved for Help
-; F2 reserved for Edit Text
+; F1 reserved for Find Best Fit 
 
-;-------------------------- F3: Shrink
-*F3::EnableDoubleTap("Shrink")
+;-------------------------- F2: Shrink
+*F2::EnableDoubleTap("Shrink")
 SingleTapShrink() { 
 	DoAction(1, lastMods)
 }
 DoubleTapShrink() {
-	DoAction(1,lastMods . "^")
+	DoAction(1, lastMods . "^")
 }
 
-;-------------------------- F4: Reset
-F4::DoAction(2)		; Reset
-; We won't mess with Alt+F4 or Ctrl+F4 (unless paired with Shift), as these have special meanings.
-*+F4::DoAction(2, GetModKeyStates())	; Reset, don't validate. 
+;-------------------------- F3: Reset
+*F3::EnableDoubleTap("Reset")
+SingleTapReset() { 
+	DoAction(2, lastMods)
+}
+DoubleTapReset() {
+	DoAction(2, lastMods . "!")
+}
 
-;-------------------------- F5: Expand
-*F5::EnableDoubleTap("Expand")
+;-------------------------- F4: Expand
+*F4::EnableDoubleTap("Expand")
 SingleTapExpand() { 
 	DoAction(3, lastMods)
 }
@@ -55,31 +58,45 @@ DoubleTapExpand() {
 	DoAction(3, lastMods . "^")
 }
 
-;-------------------------- F6: Adjust
-; Using any modifiers or double-tap with F6 cancels out the move to next page before adjusting.
-F6::EnableDoubleTap("Adjust")
+;-------------------------- F5: Adjust
+*F5::EnableDoubleTap("Adjust")
 SingleTapAdjust() {  
-	; Single F6 with no modifiers goes to the next page and does Adjust.
+	SendPAClick(4,1, lastMods)
+}
+DoubleTapAdjust() {
+	SendPAClick(4,3, lastMods)
+}
+
+;-------------------------- F6: Adjust Next Page
+*F6::EnableDoubleTap("AdjustNext")
+SingleTapAdjustNext() {  
+	r := NextPageForAdjust()
+	Switch r {
+		case "nextPg":
+			SendPAClick(4,1, lastMods)
+			return
+		case "eof":
+			MsgBox You are already on the final page.
+			return
+	}
+}
+DoubleTapAdjustNext() {
+	r := NextPageForAdjust()
+	Switch r {
+		case "nextPg":
+			SendPAClick(4,3, lastMods)
+			return
+		case "eof":
+			MsgBox You are already on the final page.
+			return
+	}
+}
+NextPageForAdjust() {
 	; Activate InDesign.
 	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% 
 	; Ctrl+Alt+Shift+Minus should move to the next page and signal when complete.
-	Send ^!+-S
-	GetId2PaResponse()  ; Wait till InDesign responds
-	SendPAClick(4,1)
-}
-DoubleTapAdjust() {
-	; Double F6 with no modifiers does Adjust All
-	SendPAClick(4,3)
-}
-
-*F6::EnableDoubleTap("AdjustMod")
-SingleTapAdjustMod() {  
-	; Single F6 with modifiers does Adjust with mods on current page
-	SendPAClick(4, 1, lastMods)
-}
-DoubleTapAdjustMod() {
-	; Double F6 with modifiers does Adjust All with mods on current page
-	SendPAClick(4, 3, lastMods)
+	Send ^!+-
+	return GetId2PaResponse()  ; Wait till InDesign responds
 }
 
 ;-------------------------- F7: Update Header
