@@ -1,7 +1,7 @@
 ; PA Commander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-Version = 0.0.5
+Version = 0.0.6
 
 ;========================== 
 ; Initialization
@@ -25,8 +25,6 @@ global lastMods
 ; and, if there is an active window, it's one of them:
 #If (WinExist(IdWin) and WinExist(PaWin)) and (WinActive(IdWin) or WinActive(PaWin) or NoWinActive())
 
-; Ins - InDesign: Toggle Page/Col
-; Esc - InDesign: Toggle Text/Col
 ; F1 reserved for "Find Best Fit" in a future version of PA
 
 ;-------------------------- F2: Shrink
@@ -68,33 +66,22 @@ DoubleTapAdjust() {
 ;-------------------------- F6: Adjust Next Page
 *F6::EnableDoubleTap("AdjustNext")
 SingleTapAdjustNext() {  
-	r := NextPageForAdjust()
-	Switch r {
-		case "nextPg":
-			SendPAClick(4,1, lastMods)
-			return
-		case "eof":
-			MsgBox You are already on the final page.
-			return
-	}
+	AdjustNextPage(1)
 }
 DoubleTapAdjustNext() {
-	r := NextPageForAdjust()
+	AdjustNextPage(3)
+}
+AdjustNextPage(buttonCol) {
+	SendIdKeys("^!+-") ; Ctrl+Alt+Shift+Minus should move to the next page and signal when complete.
+	r := GetId2PaResponse()  ; Wait till InDesign responds
 	Switch r {
 		case "nextPg":
-			SendPAClick(4,3, lastMods)
+			SendPAClick(4, buttonCol, lastMods)
 			return
 		case "eof":
 			MsgBox You are already on the final page.
 			return
 	}
-}
-NextPageForAdjust() {
-	; Activate InDesign.
-	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% 
-	; Ctrl+Alt+Shift+Minus should move to the next page and signal when complete.
-	Send ^!+-
-	return GetId2PaResponse()  ; Wait till InDesign responds
 }
 
 ;-------------------------- F7: Update Header
@@ -145,20 +132,42 @@ DoubleTapValidate() {
 ;-------------------------- Ctrl+Shift+n: Next Book
 ^+n::SendPAClick(12,2) 
 
-;------------------------------------------------
+;===================================================
 ; Hotkeys to pass to PA7 when InDesign is active:
-#If WinExist(PaWin) and WinActive(IdWin)
+#If (WinExist(IdWin) and WinExist(PaWin)) and (WinActive(IdWin) or NoWinActive())
 ^a::SendPAKeys("^a")  ; Open/edit job
 ^d::SendPAKeys("^d")  ; Adjust illustrations 
 ^g::SendPAKeys("^g")  ; Go to chapter:verse
 ^!o::SendPAKeys("!o") ; Ctrl+Alt+o for Options
 ^!j::SendPAKeys("^j") ; Ctrl+Alt+j for Job Settings
 
+;===================================================
+; Hotkeys to pass to InDesign when PA is active:
+#If (WinExist(IdWin) and WinExist(PaWin)) and (WinActive(PaWin) or NoWinActive())
+
+PgUp::SendIdKeys("{PgUp}")
+PgDn::SendIdKeys("{PgDn}")
++PgUp::SendIdKeys("+{PgUp}")
++PgDn::SendIdKeys("+{PgDn}")
+Ins::SendIdKeys("{Ins}")  	; Ins - InDesign: Toggle Page/Col
+Esc::SendIdKeys("{Esc}") 	; Esc - InDesign: Toggle Text/Col
+
 #If
+
+;===================================================
+; Use Ctrl+Alt+Shift+R to reload this script if you make changes to it.
+^!+r::Reload
 
 ;========================== 
 ; HELPER FUNCTIONS
 ;========================== 
+
+;--------------------------
+; Send the provided keys to InDesign
+SendIdKeys(keys) {
+	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% ; Activate InDesign
+	Send %keys%
+}
 
 ;--------------------------
 ; Send the provided keys to PA
@@ -266,8 +275,4 @@ NoWinActive() {
 	WinGetClass, class, A
 	return (class == "")
 }
-
-;===================================================
-; Use Ctrl+Alt+Shift+R to reload this script if you make changes to it.
-^!+r::Reload
 

@@ -1,10 +1,26 @@
+If you already have a customized set of keyboard shortcuts that you want to use while typesetting with PA, 
+manually assign the keyboard shortcuts below in your customized set.
+
 Product area : Scripts
-	PACmd: EditText.jsx --- Default: Shift+Escape
-	PACmd: Extend2Next.jsx --- Text: Shift+Page Down, Default: Shift+Page Down
-	PACmd: Extend2Prev.jsx --- Default: Shift+Page Up, Text: Shift+Page Up
-	PACmd: GetScopeDefault.jsx --- Default: Shift+Ctrl+Alt+=
-	PACmd: GetScopeText.jsx --- Text: Shift+Ctrl+Alt+=
-	PACmd: NextCol.jsx --- Text: Page Down, Default: Page Down
-	PACmd: NextPageForAdjust.jsx --- Default: Shift+Ctrl+Alt+-, Text: Shift+Ctrl+Alt+-
-	PACmd: PrevCol.jsx --- Text: Page Up, Default: Page Up
-	PACmd: TogglePageCol.jsx --- Default: Escape
+	Application: PACmd: EditText.jsx --- Default: Escape
+	Application: PACmd: Extend2Next.jsx --- Text: Shift+Page Down, Default: Shift+Page Down
+	Application: PACmd: Extend2Prev.jsx --- Default: Shift+Page Up, Text: Shift+Page Up
+	Application: PACmd: GetScopeDefault.jsx --- Default: Shift+Ctrl+Alt+=
+	Application: PACmd: GetScopeText.jsx --- Text: Shift+Ctrl+Alt+=
+	Application: PACmd: NextCol.jsx --- Default: Page Down
+	Application: PACmd: NextPageForAdjust.jsx --- Default: Shift+Ctrl+Alt+-, Text: Shift+Ctrl+Alt+-
+	Application: PACmd: NextPara.jsx --- Text: Page Down
+	Application: PACmd: PrevCol.jsx --- Default: Page Up
+	Application: PACmd: PrevPara.jsx --- Text: Page Up
+	Application: PACmd: TogglePageCol.jsx --- Default: Insert, Text: Insert
+
+Product area : Window Menu
+	Styles: Character Styles --- Default: Shift+Ctrl+I
+	Styles: Paragraph Styles --- Default: Ctrl+I
+
+Otherwise, copy PACommander.indk to the "InDesign Shortcut Sets" folder, 
+which can be found in a folder named like this:
+C:\Users\[UserName]\AppData\Roaming\Adobe\InDesign\Version [XX.X]\[Lang]\InDesign Shortcut Sets
+After copying the indk file to that folder, go to Edit > Keyboard Shortcuts, and select
+the PACommander set.
+
