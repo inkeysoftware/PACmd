@@ -1,4 +1,4 @@
-; PA Commander, for PA7, to run Publishing Assistant from the keyboard.
+; PA Keymander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
 Version = 0.0.6
