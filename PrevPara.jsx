@@ -12,7 +12,7 @@ function main() {
 	if (nextp == null) {
 		return; // end of story
 	}
-	nextIp = nextp.insertionPoints[0];
+	nextIp = nextp.insertionPoints[-2];
 	app.activeWindow.activePage = nextIp.parentTextFrames[0].parentPage;
 	app.activeWindow.select(nextp);
 
