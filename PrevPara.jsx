@@ -17,13 +17,59 @@ function main() {
 	app.activeWindow.select(nextp);
 
 	// If there had been any extended selection, wipe it out.
-	selEnd = getPersistentNum("pac:selEnd");
-	if (selEnd) {
-		unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
-		selEnd = setPersistentNum("pac:selEnd", 0);
-	}
+	// selEnd = getPersistentNum("pac:selEnd");
+	// if (selEnd) {
+		// unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
+		// selEnd = setPersistentNum("pac:selEnd", 0);
+	// }
 
 	$.sleep(100);
 	app.activeWindow.select(nextIp);
 }
 
+function main() {
+	curIp = app.selection[0].insertionPoints[0];
+	curPara = curIp.paragraphs[0];
+	curParas = curIp.paragraphs;
+	thisFrame = curIp.parentTextFrames[0];
+
+	idx = -1;  // Rather that using nextItem() on a paragraph that may be deep in the story, just search the current frame.
+	for (pp = 0; pp<thisFrame.paragraphs.length; pp++) {
+		if (thisFrame.paragraphs[pp] == curPara) {
+			idx = pp;
+			break;
+		}
+	}
+	if (idx > 0) {
+		nextPara = thisFrame.paragraphs[idx-1];
+	} else {
+		thisFrameIdx = getFrameIdx(thisFrame);
+		if (thisFrameIdx == 1) {   // first frame
+			nextPara = curPara; 
+		} else { 
+			nextFrame = getBodyFrameByIdx(thisFrameIdx - 1);
+			lastParagraph = nextFrame.paragraphs[-1];
+			if (lastParagraph == curPara)  
+				nextPara = nextFrame.paragraphs[-2];
+			else
+				nextPara = lastParagraph;
+		}
+	}
+	try {
+		nextIp = nextPara.insertionPoints[0];
+		nextPage = nextIp.parentTextFrames[0].parentPage;
+		app.activeWindow.activePage = nextPage;
+		app.activeWindow.select(nextPara);
+
+		// If there had been any extended selection, wipe it out.
+		selEnd = getPersistentNum("pac:selEnd");
+		if (selEnd) {
+			unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
+			selEnd = setPersistentNum("pac:selEnd", 0);
+		}
+
+		$.sleep(100);
+		app.activeWindow.select(nextIp);
+	} catch(err) {
+	}
+}

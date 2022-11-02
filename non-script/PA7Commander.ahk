@@ -1,7 +1,7 @@
 ; PA Keymander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-Version = 0.0.6
+Version = 0.0.7
 
 ;========================== 
 ; Initialization
@@ -175,6 +175,8 @@ SendPAKeys(keys) {
 	IfWinNotActive, %PaWin%,, WinActivate, %PaWin% ; Activate PA
 	Send %keys%
 	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% ; Activate InDesign
+	WinWait, %PaWin%
+	SoundPlay, %A_ScriptDir%\click.wav
 }
 
 ;--------------------------
@@ -186,6 +188,8 @@ SendPAClick(row, col, mods="") {
 	x := W * col / 4 
 	Send %mods%{Click %x% %y%}
 	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% ; Activate InDesign
+	WinWait, %PaWin%
+	SoundPlay, %A_ScriptDir%\click.wav
 }
 
 ;--------------------------
