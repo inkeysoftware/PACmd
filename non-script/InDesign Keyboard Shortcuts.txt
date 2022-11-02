@@ -20,7 +20,10 @@ Product area : Window Menu
 
 Otherwise, copy PACommander.indk to the "InDesign Shortcut Sets" folder, 
 which can be found in a folder named like this:
-C:\Users\[UserName]\AppData\Roaming\Adobe\InDesign\Version [XX.X]\[Lang]\InDesign Shortcut Sets
+  %appdata%\Adobe\InDesign\Version [XX.X]\[Lang]\InDesign Shortcut Sets
+For example:
+  C:\Users\JohnDoe\AppData\Roaming\Adobe\InDesign\Version 17.0\en_US\InDesign Shortcut Sets
+
 After copying the indk file to that folder, go to Edit > Keyboard Shortcuts, and select
 the PACommander set.
 

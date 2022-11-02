@@ -36,12 +36,12 @@
 		<string>Ctrl+#Keyboard_F4</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0x100 + 9" name="KBSCE Edit menu:&amp;Undo NextCol"></action-id>
+		<action-id value="0x100 + 9" name="KBSCE Edit menu:&amp;Undo"></action-id>
 		<context>DefaultContext</context>
 		<string>Ctrl+Z</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0x100 + 10" name="KBSCE Edit menu:&amp;Redo"></action-id>
+		<action-id value="0x100 + 10" name="KBSCE Edit menu:&amp;Redo Resize Item"></action-id>
 		<context>DefaultContext</context>
 		<string>Shift+Ctrl+Z</string>
 	</shortcut>
@@ -2681,78 +2681,73 @@
 		<string>B</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0xff000000 + 65" name="Scripts:Application:PACmd:Extend2Next.jsx"></action-id>
-		<context>TextContext</context>
-		<string>Shift+#Keyboard_Page Down</string>
-	</shortcut>
-	<shortcut>
-		<action-id value="0xff000000 + 65" name="Scripts:Application:PACmd:Extend2Next.jsx"></action-id>
-		<context>DefaultContext</context>
-		<string>Shift+#Keyboard_Page Down</string>
-	</shortcut>
-	<shortcut>
-		<action-id value="0xff000000 + 66" name="Scripts:Application:PACmd:Extend2Prev.jsx"></action-id>
-		<context>DefaultContext</context>
-		<string>Shift+#Keyboard_Page Up</string>
-	</shortcut>
-	<shortcut>
-		<action-id value="0xff000000 + 66" name="Scripts:Application:PACmd:Extend2Prev.jsx"></action-id>
-		<context>TextContext</context>
-		<string>Shift+#Keyboard_Page Up</string>
-	</shortcut>
-	<shortcut>
-		<action-id value="0xff000000 + 72" name="Scripts:Application:PACmd:TogglePageCol.jsx"></action-id>
-		<context>DefaultContext</context>
-		<string>#Keyboard_Insert</string>
-	</shortcut>
-	<shortcut>
-		<action-id value="0xff000000 + 72" name="Scripts:Application:PACmd:TogglePageCol.jsx"></action-id>
-		<context>TextContext</context>
-		<string>#Keyboard_Insert</string>
-	</shortcut>
-	<shortcut>
-		<action-id value="0xff000000 + 76" name="Scripts:Application:PACmd:NextPara.jsx"></action-id>
-		<context>TextContext</context>
-		<string>#Keyboard_Page Down</string>
-	</shortcut>
-	<shortcut>
-		<action-id value="0xff000000 + 77" name="Scripts:Application:PACmd:PrevPara.jsx"></action-id>
-		<context>TextContext</context>
-		<string>#Keyboard_Page Up</string>
-	</shortcut>
-	<shortcut>
-		<action-id value="0xff000000 + 82" name="Scripts:Application:PACmd:EditText.jsx"></action-id>
+		<action-id value="0xff000100 + 1" name="Scripts:Application:PAKey:EditText.jsx"></action-id>
 		<context>DefaultContext</context>
 		<string>#Keyboard_Escape</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0xff000000 + 84" name="Scripts:Application:PACmd:GetScopeDefault.jsx"></action-id>
+		<action-id value="0xff000100 + 2" name="Scripts:Application:PAKey:Extend2Next.jsx"></action-id>
+		<context>TextContext</context>
+		<string>Shift+#Keyboard_Page Down</string>
+	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 2" name="Scripts:Application:PAKey:Extend2Next.jsx"></action-id>
+		<context>DefaultContext</context>
+		<string>Shift+#Keyboard_Page Down</string>
+	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 3" name="Scripts:Application:PAKey:Extend2Prev.jsx"></action-id>
+		<context>DefaultContext</context>
+		<string>Shift+#Keyboard_Page Up</string>
+	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 3" name="Scripts:Application:PAKey:Extend2Prev.jsx"></action-id>
+		<context>TextContext</context>
+		<string>Shift+#Keyboard_Page Up</string>
+	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 4" name="Scripts:Application:PAKey:GetScopeDefault.jsx"></action-id>
 		<context>DefaultContext</context>
 		<string>Shift+Ctrl+Alt+=</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0xff000000 + 85" name="Scripts:Application:PACmd:GetScopeText.jsx"></action-id>
+		<action-id value="0xff000100 + 5" name="Scripts:Application:PAKey:GetScopeText.jsx"></action-id>
 		<context>TextContext</context>
 		<string>Shift+Ctrl+Alt+=</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0xff000000 + 86" name="Scripts:Application:PACmd:NextCol.jsx"></action-id>
+		<action-id value="0xff000100 + 6" name="Scripts:Application:PAKey:NextCol.jsx"></action-id>
 		<context>DefaultContext</context>
 		<string>#Keyboard_Page Down</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0xff000000 + 88" name="Scripts:Application:PACmd:NextPageForAdjust.jsx"></action-id>
+		<action-id value="0xff000100 + 7" name="Scripts:Application:PAKey:NextPageForAdjust.jsx"></action-id>
 		<context>DefaultContext</context>
 		<string>Shift+Ctrl+Alt+-</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0xff000000 + 88" name="Scripts:Application:PACmd:NextPageForAdjust.jsx"></action-id>
+		<action-id value="0xff000100 + 7" name="Scripts:Application:PAKey:NextPageForAdjust.jsx"></action-id>
 		<context>TextContext</context>
 		<string>Shift+Ctrl+Alt+-</string>
 	</shortcut>
 	<shortcut>
-		<action-id value="0xff000000 + 90" name="Scripts:Application:PACmd:PrevCol.jsx"></action-id>
+		<action-id value="0xff000100 + 8" name="Scripts:Application:PAKey:NextPara.jsx"></action-id>
+		<context>TextContext</context>
+		<string>#Keyboard_Page Down</string>
+	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 9" name="Scripts:Application:PAKey:PrevCol.jsx"></action-id>
 		<context>DefaultContext</context>
 		<string>#Keyboard_Page Up</string>
+	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 10" name="Scripts:Application:PAKey:PrevPara.jsx"></action-id>
+		<context>TextContext</context>
+		<string>#Keyboard_Page Up</string>
+	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 11" name="Scripts:Application:PAKey:TogglePageCol.jsx"></action-id>
+		<context>DefaultContext</context>
+		<string>#Keyboard_Insert</string>
 	</shortcut>
 </shortcut-set>
