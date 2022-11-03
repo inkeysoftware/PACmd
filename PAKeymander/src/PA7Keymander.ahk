@@ -13,7 +13,7 @@ Version = 0.0.8
 global PaWin := "Publishing Assistant ahk_class WindowsForms10.Window.8.app.0.13965fa_r6_ad1"
 global IdWin := "ahk_class indesign" 
 EnvGet tempFolder, TEMP
-global ID2PAresponseFile:=tempFolder . "\ID2PAresponse.txtx"
+global ID2PAresponseFile:=tempFolder . "\ID2PAresponse.txt"
 SetTitleMatchMode, 2
 CoordMode, Mouse, Window
 MsgBox 0, PubAssist7.ahk, Launching PA Keymander`nVersion: %Version%, 1
