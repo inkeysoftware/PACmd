@@ -17,7 +17,7 @@ function main() {
 		app.activeWindow.select(getBodyFrame(app.activeWindow.activePage, colCt()));
         return;  
     }
-	unhiliteCol(curFrame);  // shouldn't be necessary, if we didn't mess up something earlier
+	//unhiliteCol(curFrame);  // shouldn't be necessary, if we didn't mess up something earlier
 	
 	iCurCol = getFrameIdx(curFrame);
 	if (iCurCol == idxLastCol()) {

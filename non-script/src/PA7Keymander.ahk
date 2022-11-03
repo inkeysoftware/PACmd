@@ -1,7 +1,11 @@
 ; PA Keymander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-Version = 0.0.7
+Version = 0.0.8
+;@Ahk2Exe-SetVersion 0.0.0.8
+;@Ahk2Exe-SetName PAKeymander
+;@Ahk2Exe-SetProductName PAKeymander
+;@Ahk2Exe-SetMainIcon PAKey128.ico
 
 ;========================== 
 ; Initialization
@@ -9,10 +13,10 @@ Version = 0.0.7
 global PaWin := "Publishing Assistant ahk_class WindowsForms10.Window.8.app.0.13965fa_r6_ad1"
 global IdWin := "ahk_class indesign" 
 EnvGet tempFolder, TEMP
-global ID2PAresponseFile:=tempFolder . "\ID2PAresponse.txt"
+global ID2PAresponseFile:=tempFolder . "\ID2PAresponse.txtx"
 SetTitleMatchMode, 2
 CoordMode, Mouse, Window
-MsgBox 0, PubAssist7.ahk, Launching PA Commander`nVersion: %Version%, 1
+MsgBox 0, PubAssist7.ahk, Launching PA Keymander`nVersion: %Version%, 1
 global lastMods
 #SingleInstance Force
 
@@ -155,8 +159,10 @@ Esc::SendIdKeys("{Esc}") 	; Esc - InDesign: Toggle Text/Col
 #If
 
 ;===================================================
-; Use Ctrl+Alt+Shift+R to reload this script if you make changes to it.
+; Use Ctrl+Alt+Shift+R to reload this script if you make changes to it. (Uncompiled version only.)
+;@Ahk2Exe-IgnoreBegin
 ^!+r::Reload
+;@Ahk2Exe-IgnoreEnd
 
 ;========================== 
 ; HELPER FUNCTIONS
@@ -204,7 +210,9 @@ GetId2PaResponse() {
 		}
 		Sleep, 100
 	}
-	MsgBox No response via %ID2PAresponseFile%
+	MsgBox 17, Error: No Response from InDesign shortcut key, PAKeymander has not received an expected response from InDesign.`n`nPlease go to [Edit] > [Keyboard shortcuts], and ensure that the [PAKeymander] set is selected.`n`nIf it was already selected, please select [Scripts] from the `n[Product Area] dropdown, and ensure that the keyboard shortcuts assigned to each script match the settings in the PAKeyInDesignKeyboardShortcuts.txt file.`n`nWould you like to open this file now?
+	IfMsgBox, OK 
+		Run %A_ScriptDir%\PAKeyInDesignKeyboardShortcuts.txt
 	return ""
 }
 
@@ -245,7 +253,7 @@ DoAction(action, mods="") {
 			SendPAClick(3,action, mods)
 			return
 		case "":
-			MsgBox No response received from InDesign script.
+			; MsgBox No response received from InDesign script.
 			return
 	}
 	MsgBox PA7 does not yet support "%scope%" actions.
