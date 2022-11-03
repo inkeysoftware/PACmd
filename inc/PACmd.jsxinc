@@ -164,7 +164,8 @@ function Respond2PA(cmd) {
 	file.open('w');
 	file.write(cmd);
 	file.close();
-	file.rename(cmdFilebase + ".txt");
+	file.copy(cmdFilebase + ".txt");
+	file.remove();
 }
 
 
