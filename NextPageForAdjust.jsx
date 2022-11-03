@@ -17,11 +17,11 @@ app.doScript(main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT
 function main() {
 
 	// If there was an extended selection, cancel it.
-	selEnd = getPersistentNum("pac:selEnd");
+	selEnd = getPersistentNum("end");
 	if (selEnd != 0) {
-		selStart = getPersistentNum("pac:selStart");
+		selStart = getPersistentNum("start");
 		unhighlightRange(selStart, selEnd);
-		selEnd = setPersistentNum("pac:selEnd", 0);
+		selEnd = setPersistentNum("end", 0);
 	}
 
 	curFrame = getCurColFrame();

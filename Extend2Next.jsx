@@ -8,7 +8,7 @@ app.doScript(main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT
 
 // Main function: 
 function main() {
-	selEnd = getPersistentNum("pac:selEnd");
+	selEnd = getPersistentNum("end");
 	if (selEnd == 0) {
 		// There was not yet an extended selection. Extend forward 1 col.
 		curFrame = getCurColFrame();
@@ -21,15 +21,15 @@ function main() {
 		if (iCurCol == idxLastCol()) {
 			return;  // We can't advance any further.
 		}
-		selStart = setPersistentNum("pac:selStart", iCurCol);
-		selEnd = setPersistentNum("pac:selEnd", iCurCol + 1);
+		selStart = setPersistentNum("start", iCurCol);
+		selEnd = setPersistentNum("end", iCurCol + 1);
 		hiliteCol(curFrame);
 		colNew = getBodyFrameByIdx(selEnd);
 		hiliteCol(colNew);
 		app.activeWindow.select(colNew);
 	} else {
 		// There was already an extended selection
-		selStart = getPersistentNum("pac:selStart");
+		selStart = getPersistentNum("start");
 		curFrame = getCurColFrame();
 		if (curFrame == null) {
 			iCurCol = selEnd;
@@ -39,12 +39,12 @@ function main() {
 				// Somehow, they've moved the selection since setting up. For now, just cancel that selection and start over.
 				unhighlightRange(selStart, selEnd);
 				if (iCurCol == idxLastCol()) {
-					selEnd = setPersistentNum("pac:selEnd", 0);
+					selEnd = setPersistentNum("end", 0);
 					return; // We can't advance any further.
 				}
 				
-				selStart = setPersistentNum("pac:selStart", iCurCol);
-				selEnd = setPersistentNum("pac:selEnd", iCurCol + 1);
+				selStart = setPersistentNum("start", iCurCol);
+				selEnd = setPersistentNum("end", iCurCol + 1);
 				hiliteCol(curFrame);
 				colNew = getBodyFrameByIdx(selEnd);
 				hiliteCol(colNew);
@@ -56,7 +56,7 @@ function main() {
 			return;
 		}
 		if (selStart == selEnd + 1) { // reversing selection to start: remove all selection, unhighlight both
-			selEnd = setPersistentNum("pac:selEnd", 0);
+			selEnd = setPersistentNum("end", 0);
 			unhiliteCol(curFrame);
 			colNew = getBodyFrameByIdx(iCurCol + 1);
 			unhiliteCol(colNew);
@@ -64,7 +64,7 @@ function main() {
 			return;
 		}
 		if (selStart == selEnd) { // we are to extend the selection forwards
-			selEnd = setPersistentNum("pac:selEnd", iCurCol + 1);
+			selEnd = setPersistentNum("end", iCurCol + 1);
 			hiliteCol(curFrame);
 			colNew = getBodyFrameByIdx(selEnd);
 			hiliteCol(colNew);
@@ -72,7 +72,7 @@ function main() {
 			return;
 		}
 		if (selStart < selEnd) { // we are to extend the selection forwards
-			selEnd = setPersistentNum("pac:selEnd", selEnd + 1);
+			selEnd = setPersistentNum("end", selEnd + 1);
 			colNew = getBodyFrameByIdx(selEnd);
 			hiliteCol(colNew);
 			app.activeWindow.select(colNew);
@@ -80,7 +80,7 @@ function main() {
 		}
 		if (selStart > selEnd) { // we are to reduce the selection forwards
 			unhiliteCol(curFrame);
-			selEnd = setPersistentNum("pac:selEnd", selEnd + 1);
+			selEnd = setPersistentNum("end", selEnd + 1);
 			colNew = getBodyFrameByIdx(selEnd);
 			app.activeWindow.select(colNew);
 		}

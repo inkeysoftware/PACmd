@@ -6,10 +6,10 @@ app.doScript(main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT
 // Main function: 
 function main() {
 	// If there had been any extended selection, wipe it out.
-	selEnd = getPersistentNum("pac:selEnd");
+	selEnd = getPersistentNum("end");
 	if (selEnd) {
-		unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
-		selEnd = setPersistentNum("pac:selEnd", 0);
+		unhighlightRange(getPersistentNum("start"), selEnd);
+		selEnd = setPersistentNum("end", 0);
 		return;
 	}
 	if (colCt() == 1) {
@@ -27,8 +27,8 @@ function main() {
 	otherColIdx = colIdx - colNum + otherColNum;
 	hiliteCol(curFrame);
 	hiliteCol(getBodyFrame(curFrame.parentPage, otherColNum));
-	setPersistentNum("pac:selEnd", colIdx);
-	setPersistentNum("pac:selStart", otherColIdx);
+	setPersistentNum("end", colIdx);
+	setPersistentNum("start", otherColIdx);
 	
 
 }

@@ -2750,4 +2750,14 @@
 		<context>DefaultContext</context>
 		<string>#Keyboard_Insert</string>
 	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 12" name="Scripts:Application:PAKey:ClearAllFrames.jsx"></action-id>
+		<context>DefaultContext</context>
+		<string>Shift+Ctrl+H</string>
+	</shortcut>
+	<shortcut>
+		<action-id value="0xff000100 + 12" name="Scripts:Application:PAKey:ClearAllFrames.jsx"></action-id>
+		<context>TextContext</context>
+		<string>Shift+Ctrl+H</string>
+	</shortcut>
 </shortcut-set>

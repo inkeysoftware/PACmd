@@ -6,10 +6,10 @@ app.doScript(main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT
 // Main function: 
 function main() {
 	// If there had been any extended selection, wipe it out.
-	selEnd = getPersistentNum("pac:selEnd");
+	selEnd = getPersistentNum("end");
 	if (selEnd) {
-		unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
-		selEnd = setPersistentNum("pac:selEnd", 0);
+		unhighlightRange(getPersistentNum("start"), selEnd);
+		selEnd = setPersistentNum("end", 0);
 	}
 	
 	curFrame = getCurColFrame();
@@ -17,7 +17,7 @@ function main() {
 		app.activeWindow.select(getBodyFrame(app.activeWindow.activePage, colCt()));
         return;  
     }
-	//unhiliteCol(curFrame);  // shouldn't be necessary, if we didn't mess up something earlier
+	unhiliteCol(curFrame);  // shouldn't be necessary, if we didn't mess up something earlier
 	
 	iCurCol = getFrameIdx(curFrame);
 	if (iCurCol == idxLastCol()) {

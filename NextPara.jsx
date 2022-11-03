@@ -41,10 +41,10 @@ function main() {
 	app.activeWindow.select(nextPara);
 
 	// If there had been any extended selection, wipe it out.
-	selEnd = getPersistentNum("pac:selEnd");
+	selEnd = getPersistentNum("end");
 	if (selEnd) {
-		unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
-		selEnd = setPersistentNum("pac:selEnd", 0);
+		unhighlightRange(getPersistentNum("start"), selEnd);
+		selEnd = setPersistentNum("end", 0);
 	}
 
 	$.sleep(100);

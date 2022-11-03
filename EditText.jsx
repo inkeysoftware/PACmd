@@ -7,11 +7,11 @@ app.doScript(main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT
 function main() {
 	
 	// If there was an extended selection, cancel it.
-	selEnd = getPersistentNum("pac:selEnd");
+	selEnd = getPersistentNum("end");
 	if (selEnd != 0) {
-		selStart = getPersistentNum("pac:selStart");
+		selStart = getPersistentNum("start");
 		unhighlightRange(selStart, selEnd);
-		selEnd = setPersistentNum("pac:selEnd", 0);
+		selEnd = setPersistentNum("end", 0);
 	}
 
 	var selFrame;
@@ -37,10 +37,10 @@ function main() {
 	app.activeWindow.select(nextp);
 
 	// If there had been any extended selection, wipe it out.
-	selEnd = getPersistentNum("pac:selEnd");
+	selEnd = getPersistentNum("end");
 	if (selEnd) {
-		unhighlightRange(getPersistentNum("pac:selStart"), selEnd);
-		selEnd = setPersistentNum("pac:selEnd", 0);
+		unhighlightRange(getPersistentNum("start"), selEnd);
+		selEnd = setPersistentNum("end", 0);
 	}
 
 	$.sleep(100);

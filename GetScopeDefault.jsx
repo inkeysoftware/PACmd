@@ -5,8 +5,8 @@ app.doScript(main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT
 
 // Main function: 
 function main() {
-	selEnd = getPersistentNum("pac:selEnd");
-	selStart = getPersistentNum("pac:selStart");
+	selEnd = getPersistentNum("end");
+	selStart = getPersistentNum("start");
 	if (selEnd==0) {
 		Respond2PA("Col");
 		return;
@@ -22,7 +22,7 @@ function main() {
 	if (iCurCol != selEnd) {
 		// Somehow, the selection is no longer where we left it. Cancel extended selection.
 		unhighlightRange(selStart, selEnd);
-		selEnd = setPersistentNum("pac:selEnd", 0);
+		selEnd = setPersistentNum("end", 0);
 		Respond2PA("Col");
 		return;
 	}
@@ -42,8 +42,8 @@ function main() {
 		// newFrame = getBodyFrameByIdx(selStart);
 		// app.activeWindow.activePage = newFrame.parentPage; 
 		// app.activeWindow.select(newFrame);
-		// setPersistentNum("pac:selEnd", selStart);
-		// setPersistentNum("pac:selStart", iCurCol);
+		// setPersistentNum("end", selStart);
+		// setPersistentNum("start", iCurCol);
 	// }
 		
 	Respond2PA((Math.abs(selStart - selEnd) + 1).toString() + "-column");

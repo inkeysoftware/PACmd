@@ -2,19 +2,89 @@
 
 // Functions common to PA Commander scripts
 
-// Temporarily assume we are always dealing with 2-column documents.
-function colCt() {
-	return 2;
+
+//===================================================
+// Functions to read metadata strings from the doc.
+// 
+// getMetadata(idStr) returns a metadata string for the provided ID string:
+// 1:  Number of columns ("1" or "2")
+// 43: Diglot ("Yes" or "No")
+// 58: "Left to Right" or "Right to Left"
+// 60: "Primary Text in outside column" or "Primary Text in left column"
+function getMetadata(idStr) {
+	return app.activeDocument.metadataPreferences.getProperty("http://ns.adobe.com/xap/1.0/", "PubAssist_" + idStr + "/*[1]")
 }
 
+//---------------------------------------------------
+// Each of the following look up the value only the first time called, and store it for quick retrieval on successive calls.
+
+function colCt() {  // Look up the column count from the document's metadata.
+	colCt.cc = colCt.cc || parseInt(getMetadata("1"));
+	return colCt.cc;
+}
+
+function isDiglot() {  // Look up the diglot status from the document's metadata.
+	isDiglot.di = isDiglot.di || getMetadata("43").substring(0,1);
+	return isDiglot.di == "Y";
+}
+
+function isRTL() {    // Look up the RTL status from the document's metadata.
+	isRTL.dir = isRTL.dir || getMetadata("58").substring(0,1);
+	return isRTL.dir == "R";
+}
+
+function isPriOut() {   // Look up the "is primary text in outside column" status from the document's metadata.
+	isPriOut.dir = isPriOut.dir || getMetadata("60").substring(16,17);
+	return isPriOut.dir == "o";
+}
+
+//===================================================
+// Store/retrieve integers in the doc by a given key.
+
+// Store an integer in the doc, with the provided key.
+function setPersistentNum(key, num) {
+	app.activeDocument.insertLabel("pak:" + key, num.toString());
+	return num;
+}
+
+// retrieve a number stored in the doc
+function getPersistentNum(key) {
+	try {
+		str = app.activeDocument.extractLabel("pak:" + key);
+		if (str.length == 0) 
+			return 0;
+		return parseInt(str);
+	} catch (err) {
+	}
+	return 0;
+}
+
+//===================================================
+// Functions to manage body TextFrames
+
+
 // getBodyFrame() - Given a Page object and a column number, return the TextFrame indicated by the column number.
-function getBodyFrame(pg, colNum) {
-	findLbl = "body" + colNum.toString();
-	for (ii=0; ii<pg.textFrames.length; ii++) {
-		if (pg.textFrames[ii].label.substring(5,0) == findLbl) {
-			return pg.textFrames[ii];
+function getBodyFrame(pg, colNum) {  
+	if (isDiglot()) {
+		if (pg.side == PageSideOptions.RIGHT_HAND && isPriOut()) // Swap columns if we're on a right page and primary is outer.
+			colNum = 3 - colNum;
+		if (isRTL())											 // Swap columns if doc is RTL.
+			colNum = 3 - colNum;
+		findLbl = (colNum == 1) ? "body" : "body_DiglotSecondaryText";
+		for (ii=0; ii<pg.textFrames.length; ii++) {				 // Find a textframe with this label.
+			if (pg.textFrames[ii].label == findLbl) {
+				return pg.textFrames[ii];
+			}
+		}
+	} else {  // Not a diglot
+		findLbl = "body" + colNum.toString();					// Find a textframe with this label.
+		for (ii=0; ii<pg.textFrames.length; ii++) {
+			if (pg.textFrames[ii].label.substring(5,0) == findLbl) {
+				return pg.textFrames[ii];
+			}
 		}
 	}
+	alert("getBodyFrame(page " + pg.name + ", " + colNum.toString() + ") failed to find " + findLbl + ".");
 	return null;
 }
 
@@ -31,6 +101,7 @@ function idxLastCol() {
 	return idxByPgCol(app.activeWindow.parent.pages.length-1, colCt());
 }
 
+// Given the index of the column, return its textframe object.
 function getBodyFrameByIdx(idx) {
 	try {
 		var pgNum = pageByIdx(idx);
@@ -43,7 +114,50 @@ function getBodyFrameByIdx(idx) {
 	}
 }
 
-// Send a message to PA Commander
+// Determine whether this frame is the first or second column on its page. (In RTL docs, the 1st col is the one on the right.)
+function getColNum(colFrame) {
+	if (isDiglot()) {
+		colNum = (colFrame.label == "body") ? 1 : 2;
+		if (isRTL()) 
+			colNum = 3 - colNum;
+		if (colFrame.parentPage.side == PageSideOptions.RIGHT_HAND && isPriOut()) {// TODO: Check that this works with RTL docstest
+			colNum = 3 - colNum;
+		}
+		return colNum;
+	} else {
+		var m = colFrame.label.match(/body(\d)/);
+		return parseInt(m[1]);
+	}
+}
+
+// Get the index of this body textframe. First body frame is 1, 2nd is 2, and so on...
+function getFrameIdx(colFrame) {
+	try {
+		var colNum = getColNum(colFrame);
+		var pgNum = colFrame.parentPage.documentOffset;
+		return idxByPgCol(pgNum, colNum);
+	} catch (err) {
+		return 0;
+	}
+}
+
+// Get the column body textframe, according to current selection. Returns null if there is no body textframe.
+function getCurColFrame() {
+    for (ii = 0; ii < app.selection.length; ii++) {  // for each item in selection
+        if ((app.selection[ii].constructor.name == "TextFrame") && (app.selection[ii].label.substring(4,0) == "body"))  // if item is a body textframe
+            return app.selection[ii];
+		try {
+			parentFrame = app.selection[ii].parentTextFrames[0]; // if item has a parent textframe
+			if (parentFrame.label.substring(4,0) == "body") 
+				return parentFrame;
+		} catch (err) {
+		}
+	}
+	return null;
+}
+
+//===================================================
+// Send a message to PAKeymander
 function Respond2PA(cmd) {
 	const cmdFilebase = Folder.temp + "/ID2PAresponse";
 	var file = new File(cmdFilebase + ".tmp");
@@ -53,68 +167,31 @@ function Respond2PA(cmd) {
 	file.rename(cmdFilebase + ".txt");
 }
 
-function getFrameIdx(colFrame) {
-	try {
-		var lbl = colFrame.label;
-		var m = lbl.match(/body(\d)/);
-		var colNum = parseInt(m[1]);
-		var pgNum = colFrame.parentPage.documentOffset;
-		return idxByPgCol(pgNum, colNum);
-	} catch (err) {
-		return 0;
-	}
-}
 
-function getCurColFrame() {
-    for (ii = 0; ii < app.selection.length; ii++) {  // for each item in selection
-        if ((app.selection[ii].constructor.name == "TextFrame") && (app.selection[ii].label.substring(4,0) == "body")) { // if item is a body textframe
-            return app.selection[ii];
-        } else {
-            try {
-                parentFrame = app.selection[ii].parentTextFrames[0]; // if item has a parent textframe
-				if (parentFrame.label.substring(4,0) == "body") {
-					return parentFrame;
-				}
-            } catch (err) {
-            }
-        }
-	}
-	return null;
-}
+//===================================================
+// Manage Highlighting
 
-function unhighlightRange(start, end) {
-	step = (end > start) ? 1 : -1;
-	for (jj=start; jj != end + step; jj = jj + step) {
-		unhiliteCol(getBodyFrameByIdx(jj));
-	}
-}
 
-function getPersistentNum(lbl) {
-	try {
-		str = app.activeDocument.extractLabel(lbl);
-		if (str.length == 0) {
-			return 0;
-		}
-		return parseInt(str);
-	} catch (err) {
-		return 0;
-	}
-}
-
-function setPersistentNum(lbl, num) {
-	app.activeDocument.insertLabel(lbl, num.toString());
-	return num;
-}
-
-function unhiliteCol(colFrame) {
-	colFrame.strokeWeight = 0;
-}
-
+// Highlight the given body textframe.
 function hiliteCol(colFrame) {
 	colFrame.strokeWeight = 5;
 	colFrame.strokeAlignment = StrokeAlignment.OUTSIDE_ALIGNMENT;
 	colFrame.strokeColor = "C=75 M=5 Y=100 K=0";
 	colFrame.strokeType = "White Diamond";
+}
+
+// Clear highlighting on the given body textframe.
+function unhiliteCol(colFrame) {
+	if (colFrame.strokeWeight > 0) 
+		colFrame.strokeWeight = 0;
+}
+
+// unhighlight a range of body textframes, inclusive of start and end.
+function unhighlightRange(start, end) {
+	step = (end > start) ? 1 : -1;
+	for (jj=start; jj != end + step; jj = jj + step) {
+		unhiliteCol(getBodyFrameByIdx(jj));
+	}
 }
 
 //===================================================

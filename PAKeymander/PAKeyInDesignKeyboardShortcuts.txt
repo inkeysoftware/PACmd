@@ -2,17 +2,18 @@ If you already have a customized set of keyboard shortcuts that you want to use 
 manually assign the keyboard shortcuts below in your customized set.
 
 Product area : Scripts
-	Application: PACmd: EditText.jsx --- Default: Escape
-	Application: PACmd: Extend2Next.jsx --- Text: Shift+Page Down, Default: Shift+Page Down
-	Application: PACmd: Extend2Prev.jsx --- Default: Shift+Page Up, Text: Shift+Page Up
-	Application: PACmd: GetScopeDefault.jsx --- Default: Shift+Ctrl+Alt+=
-	Application: PACmd: GetScopeText.jsx --- Text: Shift+Ctrl+Alt+=
-	Application: PACmd: NextCol.jsx --- Default: Page Down
-	Application: PACmd: NextPageForAdjust.jsx --- Default: Shift+Ctrl+Alt+-, Text: Shift+Ctrl+Alt+-
-	Application: PACmd: NextPara.jsx --- Text: Page Down
-	Application: PACmd: PrevCol.jsx --- Default: Page Up
-	Application: PACmd: PrevPara.jsx --- Text: Page Up
-	Application: PACmd: TogglePageCol.jsx --- Default: Insert, Text: Insert
+	Application: PAKey: ClearAllFrames.jsx --- Default: Shift+Ctrl+H, Text: Shift+Ctrl+H
+	Application: PAKey: EditText.jsx --- Default: Escape
+	Application: PAKey: Extend2Next.jsx --- Text: Shift+Page Down, Default: Shift+Page Down
+	Application: PAKey: Extend2Prev.jsx --- Default: Shift+Page Up, Text: Shift+Page Up
+	Application: PAKey: GetScopeDefault.jsx --- Default: Shift+Ctrl+Alt+=
+	Application: PAKey: GetScopeText.jsx --- Text: Shift+Ctrl+Alt+=
+	Application: PAKey: NextCol.jsx --- Default: Page Down
+	Application: PAKey: NextPageForAdjust.jsx --- Default: Shift+Ctrl+Alt+-, Text: Shift+Ctrl+Alt+-
+	Application: PAKey: NextPara.jsx --- Text: Page Down
+	Application: PAKey: PrevCol.jsx --- Default: Page Up
+	Application: PAKey: PrevPara.jsx --- Text: Page Up
+	Application: PAKey: TogglePageCol.jsx --- Default: Insert, Text: Insert
 
 Product area : Window Menu
 	Styles: Character Styles --- Default: Shift+Ctrl+I
