@@ -1,8 +1,8 @@
 ; PA Keymander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-Version = 0.1.0
-;@Ahk2Exe-SetVersion 0.0.1.0
+Version = 0.1.1
+;@Ahk2Exe-SetVersion 0.0.1.1
 ;@Ahk2Exe-SetName PAKeymander
 ;@Ahk2Exe-SetProductName PAKeymander
 ;@Ahk2Exe-SetMainIcon PAKey128.ico
@@ -11,6 +11,9 @@ Version = 0.1.0
 ; Initialization
 ;========================== 
 global PaWin := "Publishing Assistant ahk_class WindowsForms10.Window.8.app.0.13965fa_r6_ad1"
+PaWinDebug := "ahk_class Notepad++"
+if ((not WinExist(PaWin)) and WinExist(PaWinDebug)) 
+	PaWin := PaWinDebug
 global IdWin := "ahk_class indesign" 
 EnvGet tempFolder, TEMP
 global ID2PAresponseFile:=tempFolder . "\ID2PAresponse.txt"
@@ -157,6 +160,15 @@ Ins::SendIdKeys("{Ins}")  	; Ins - InDesign: Toggle Page/Col
 Esc::SendIdKeys("{Esc}") 	; Esc - InDesign: Toggle Text/Col
 
 #If
+
+;===================================================
+!`::
+if (WinExist(PaWin) AND NOT WinActive(PaWin)) {
+	WinActivate, %PaWin% ; Activate PA
+} else {
+	WinActivate, %IdWin% ; Activate InDesign
+}
+return
 
 ;===================================================
 ; Use Ctrl+Alt+Shift+R to reload this script if you make changes to it. (Uncompiled version only.)
