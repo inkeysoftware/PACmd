@@ -1,8 +1,8 @@
 ; PA Keymander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-Version = 0.0.8
-;@Ahk2Exe-SetVersion 0.0.0.8
+Version = 0.1.1
+;@Ahk2Exe-SetVersion 0.0.1.1
 ;@Ahk2Exe-SetName PAKeymander
 ;@Ahk2Exe-SetProductName PAKeymander
 ;@Ahk2Exe-SetMainIcon PAKey128.ico
@@ -11,6 +11,9 @@ Version = 0.0.8
 ; Initialization
 ;========================== 
 global PaWin := "Publishing Assistant ahk_class WindowsForms10.Window.8.app.0.13965fa_r6_ad1"
+PaWinDebug := "ahk_class Notepad++"
+if ((not WinExist(PaWin)) and WinExist(PaWinDebug)) 
+	PaWin := PaWinDebug
 global IdWin := "ahk_class indesign" 
 EnvGet tempFolder, TEMP
 global ID2PAresponseFile:=tempFolder . "\ID2PAresponse.txt"
@@ -34,53 +37,53 @@ global lastMods
 ;-------------------------- F2: Shrink
 *F2::EnableDoubleTap("Shrink")
 SingleTapShrink() { 
-	DoAction(1, lastMods)
+	DoAction(0, lastMods)
 }
 DoubleTapShrink() {
-	DoAction(1, lastMods . "^")
+	DoAction(0, lastMods + 2)
 }
 
 ;-------------------------- F3: Reset
 *F3::EnableDoubleTap("Reset")
 SingleTapReset() { 
-	DoAction(2, lastMods)
+	DoAction(16, lastMods)
 }
 DoubleTapReset() {
-	DoAction(2, lastMods . "!")
+	DoAction(16, lastMods + 4)
 }
 
 ;-------------------------- F4: Expand
 *F4::EnableDoubleTap("Expand")
 SingleTapExpand() { 
-	DoAction(3, lastMods)
+	DoAction(32, lastMods)
 }
 DoubleTapExpand() {
-	DoAction(3, lastMods . "^")
+	DoAction(32, lastMods + 2)
 }
 
 ;-------------------------- F5: Adjust
 *F5::EnableDoubleTap("Adjust")
 SingleTapAdjust() {  
-	SendPAClick(4,1, lastMods)
+	SendPAClick(64, lastMods)
 }
 DoubleTapAdjust() {
-	SendPAClick(4,3, lastMods)
+	SendPAClick(65, lastMods)
 }
 
 ;-------------------------- F6: Adjust Next Page
 *F6::EnableDoubleTap("AdjustNext")
 SingleTapAdjustNext() {  
-	AdjustNextPage(1)
+	AdjustNextPage(64)
 }
 DoubleTapAdjustNext() {
-	AdjustNextPage(3)
+	AdjustNextPage(65)
 }
-AdjustNextPage(buttonCol) {
+AdjustNextPage(button) {
 	SendIdKeys("^!+-") ; Ctrl+Alt+Shift+Minus should move to the next page and signal when complete.
 	r := GetId2PaResponse()  ; Wait till InDesign responds
 	Switch r {
 		case "nextPg":
-			SendPAClick(4, buttonCol, lastMods)
+			SendPAClick(button, lastMods)
 			return
 		case "eof":
 			MsgBox You are already on the final page.
@@ -91,50 +94,50 @@ AdjustNextPage(buttonCol) {
 ;-------------------------- F7: Update Header
 *F7::EnableDoubleTap("Header")
 SingleTapHeader() {  
-	SendPAClick(5, 1, lastMods) ; Update header
+	SendPAClick(66, lastMods) ; Update header
 }
 DoubleTapHeader() {
-	SendPAClick(5, 3, lastMods) ; Update all headers
+	SendPAClick(67, lastMods) ; Update all headers
 }
 
 ;-------------------------- F8: Rebuild Gutter
 *F8::EnableDoubleTap("Gutter")
 SingleTapGutter() {  
-	SendPAClick(6, 1, lastMods) ; Rebuild Gutter
+	SendPAClick(68, lastMods) ; Rebuild Gutter
 }
 DoubleTapGutter() {
-	SendPAClick(6, 3, lastMods) ; Rebuild All Gutters
+	SendPAClick(69, lastMods) ; Rebuild All Gutters
 }
 
 ;-------------------------- F9: Rebuild Marginal Verses
 *F9::EnableDoubleTap("Marginal")
 SingleTapMarginal() {  
-	SendPAClick(7, 1, lastMods) ; Rebuild Marginal Verses
+	SendPAClick(70, lastMods) ; Rebuild Marginal Verses
 }
 DoubleTapMarginal() {
-	SendPAClick(7, 3, lastMods) ; Rebuild All Marginal Verses
+	SendPAClick(71, lastMods) ; Rebuild All Marginal Verses
 }
 
 ;-------------------------- F10: Import illustrations
-*F10::SendPAClick(8,2, GetModKeyStates())  
+*F10::SendPAClick(72, GetModKeyStates())  
 
 ;-------------------------- F11: Place Notes
-*F11::SendPAClick(9,2, GetModKeyStates())  
+*F11::SendPAClick(74, GetModKeyStates())  
 
 ;-------------------------- F12: Validate
 *F12::EnableDoubleTap("Validate")
 SingleTapValidate() {  
-	SendPAClick(10, 1, lastMods) ; Validate
+	SendPAClick(76, lastMods) ; Validate
 }
 DoubleTapValidate() {
-	SendPAClick(10, 3, lastMods) ; Validate All
+	SendPAClick(77, lastMods) ; Validate All
 }
 
 ;-------------------------- Ctrl+Shift+p: New Page
-^+p::SendPAClick(11,2) 
+^+p::SendPAClick(78) 
 
 ;-------------------------- Ctrl+Shift+n: Next Book
-^+n::SendPAClick(12,2) 
+^+n::SendPAClick(79) 
 
 ;===================================================
 ; Hotkeys to pass to PA7 when InDesign is active:
@@ -157,6 +160,15 @@ Ins::SendIdKeys("{Ins}")  	; Ins - InDesign: Toggle Page/Col
 Esc::SendIdKeys("{Esc}") 	; Esc - InDesign: Toggle Text/Col
 
 #If
+
+;===================================================
+!`::
+if (WinExist(PaWin) AND NOT WinActive(PaWin)) {
+	WinActivate, %PaWin% ; Activate PA
+} else {
+	WinActivate, %IdWin% ; Activate InDesign
+}
+return
 
 ;===================================================
 ; Use Ctrl+Alt+Shift+R to reload this script if you make changes to it. (Uncompiled version only.)
@@ -186,13 +198,9 @@ SendPAKeys(keys) {
 }
 
 ;--------------------------
-; Click the button located at the specified row and column, optionally with specified modifier keys.
-SendPAClick(row, col, mods="") {
-	IfWinNotActive, %PaWin%,, WinActivate, %PaWin% ; Activate PA
-	WinGetPos, xx,yy,W,H,%PaWin%
-	y := (H/14)*(row + 1.25)  ; Calculate where to click in the PA tool window
-	x := W * col / 4 
-	Send %mods%{Click %x% %y%}
+; Click the button specified by id, optionally with specified modifier keys.
+SendPAClick(buttonid, mods=0) {
+	SendMessage 0x8001, %mods%, %buttonid%,, %PaWin%
 	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% ; Activate InDesign
 	WinWait, %PaWin%
 	SoundPlay, %A_ScriptDir%\click.wav
@@ -219,15 +227,15 @@ GetId2PaResponse() {
 ;--------------------------
 ; Get the states of the Ctrl, Shift, and Alt modifier keys, in case we want to pass them on later.
 GetModKeyStates() {
-	s := ""
-	if GetKeyState("Ctrl") {
-		s := s . "^"
-	}
+	s := 0
 	if GetKeyState("Shift") {
-		s := s . "+"
+		s := s + 1
+	}
+	if GetKeyState("Ctrl") {
+		s := s + 2
 	}
 	if GetKeyState("Alt") {
-		s := s . "!"
+		s := s + 4
 	}
 	return s
 }
@@ -235,7 +243,7 @@ GetModKeyStates() {
 ;--------------------------
 ; Do Shrink/Reset/Expand action on the current scope.
 ; First runs a script in InDesign to determine the current scope.
-DoAction(action, mods="") {
+DoAction(action, mods=0) {
 	; Activate InDesign
 	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% 
 	; Send Ctrl+Alt+Shift+Equals to InDesign to trigger the GetScopeDefault/Text script.
@@ -244,13 +252,13 @@ DoAction(action, mods="") {
 
 	Switch scope {
 		case "Para":
-			SendPAClick(1, action, mods)
+			SendPAClick(action, mods)
 			return
 		case "Col":
-			SendPAClick(2,action, mods)
+			SendPAClick(action+1, mods)
 			return
 		case "Pg":
-			SendPAClick(3,action, mods)
+			SendPAClick(action+2, mods)
 			return
 		case "":
 			; MsgBox No response received from InDesign script.
