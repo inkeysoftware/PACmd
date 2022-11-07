@@ -6,7 +6,7 @@ app.doScript(main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT
 
 // Main function: 
 function main() {
-	unhighlightRange(1, idxLastCol());
-	alert("ClearAllFrames completed.");
+	ct = unhighlightRange(1, idxLastCol());
+	alert(ct.toString() + " frames cleared.");
 }
 

@@ -183,16 +183,21 @@ function hiliteCol(colFrame) {
 
 // Clear highlighting on the given body textframe.
 function unhiliteCol(colFrame) {
-	if (colFrame.strokeWeight > 0) 
+	if (colFrame.strokeWeight > 0) { 
 		colFrame.strokeWeight = 0;
+		return 1;
+	} else 
+		return 0;
 }
 
 // unhighlight a range of body textframes, inclusive of start and end.
 function unhighlightRange(start, end) {
+	ct = 0;
 	step = (end > start) ? 1 : -1;
 	for (jj=start; jj != end + step; jj = jj + step) {
-		unhiliteCol(getBodyFrameByIdx(jj));
+		ct = ct + unhiliteCol(getBodyFrameByIdx(jj));
 	}
+	return ct;
 }
 
 //===================================================
