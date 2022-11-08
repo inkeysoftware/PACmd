@@ -1,8 +1,8 @@
 ; PA Keymander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-Version = 0.1.1
-;@Ahk2Exe-SetVersion 0.0.1.1
+Version = 0.1.2
+;@Ahk2Exe-SetVersion 0.0.1.2
 ;@Ahk2Exe-SetName PAKeymander
 ;@Ahk2Exe-SetProductName PAKeymander
 ;@Ahk2Exe-SetMainIcon PAKey128.ico
@@ -11,9 +11,14 @@ Version = 0.1.1
 ; Initialization
 ;========================== 
 global PaWin := "Publishing Assistant ahk_class WindowsForms10.Window.8.app.0.13965fa_r6_ad1"
-PaWinDebug := "ahk_class Notepad++"
+PaWinDebug := "ahk_class Notepad"
 if ((not WinExist(PaWin)) and WinExist(PaWinDebug)) 
 	PaWin := PaWinDebug
+Menu Tray, Icon, %A_ScriptDir%\PAKey128.ico,,1
+Menu Tray, Tip, PAKeymander
+Menu Tray, NoStandard
+Menu Tray, Add, Suspend, HoldIt
+Menu Tray, Add, Exit, QuitIt
 global IdWin := "ahk_class indesign" 
 EnvGet tempFolder, TEMP
 global ID2PAresponseFile:=tempFolder . "\ID2PAresponse.txt"
@@ -22,7 +27,7 @@ CoordMode, Mouse, Window
 MsgBox 0, PubAssist7.ahk, Launching PA Keymander`nVersion: %Version%, 1
 global lastMods
 #SingleInstance Force
-
+return
 
 ;==========================
 ; HOTKEY DEFINITIONS
@@ -295,4 +300,12 @@ NoWinActive() {
 	WinGetClass, class, A
 	return (class == "")
 }
+
+HoldIt:
+Suspend Toggle
+Menu, Tray, ToggleCheck, Suspend
+return
+
+QuitIt:
+ExitApp
 
