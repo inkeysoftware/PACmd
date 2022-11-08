@@ -24,14 +24,18 @@ function main() {
 	} else {
 		thisFrameIdx = getFrameIdx(thisFrame);
 		if (thisFrameIdx == idxLastCol()) {   // end of story
-			nextPara = curPara; 
+			nextPara = curPara;
 		} else { 
 			nextFrame = getBodyFrameByIdx(thisFrameIdx + 1);
 			firstParagraph = nextFrame.paragraphs[0];
-			if (firstParagraph == curPara)  
-				nextPara = nextFrame.paragraphs[1];
-			else
+			if (firstParagraph == curPara)  {
+				if (nextFrame.paragraphs.length < 2) 
+					nextPara = nextFrame.lines[0]; // Whole column is continuing the same paragraph, so go to first line.
+				else
+					nextPara = nextFrame.paragraphs[1];
+			} else {
 				nextPara = firstParagraph;
+			}
 		}
 	}
 

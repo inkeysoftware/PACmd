@@ -5,27 +5,21 @@ main();
 #include "inc/PACmd.jsxinc"
 
 // Main function: 
-function main() {
+// function mainX() {
 	
-	p = app.selection[0].insertionPoints[0];
-	nextp = p.paragraphs.previousItem(p.paragraphs[0]);
-	if (nextp == null) {
-		return; // end of story
-	}
-	nextIp = nextp.insertionPoints[-2];
-	app.activeWindow.activePage = nextIp.parentTextFrames[0].parentPage;
-	app.activeWindow.select(nextp);
-
-	// If there had been any extended selection, wipe it out.
-	// selEnd = getPersistentNum("end");
-	// if (selEnd) {
-		// unhighlightRange(getPersistentNum("start"), selEnd);
-		// selEnd = setPersistentNum("end", 0);
+	// p = app.selection[0].insertionPoints[0];
+	// nextp = p.paragraphs.previousItem(p.paragraphs[0]);
+	// if (nextp == null) {
+		// return; // end of story
 	// }
+	// nextIp = nextp.insertionPoints[-2];
+	// app.activeWindow.activePage = nextIp.parentTextFrames[0].parentPage;
+	// app.activeWindow.select(nextp);
 
-	$.sleep(100);
-	app.activeWindow.select(nextIp);
-}
+
+	// $.sleep(100);
+	// app.activeWindow.select(nextIp);
+// }
 
 function main() {
 	curIp = app.selection[0].insertionPoints[0];
