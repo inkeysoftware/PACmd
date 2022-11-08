@@ -1,8 +1,8 @@
 ; PA Keymander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-Version = 0.1.2
-;@Ahk2Exe-SetVersion 0.0.1.2
+Version = 0.1.3
+;@Ahk2Exe-SetVersion 0.0.1.3
 ;@Ahk2Exe-SetName PAKeymander
 ;@Ahk2Exe-SetProductName PAKeymander
 ;@Ahk2Exe-SetMainIcon PAKey128.ico
@@ -17,6 +17,12 @@ if ((not WinExist(PaWin)) and WinExist(PaWinDebug))
 Menu Tray, Icon, %A_ScriptDir%\PAKey128.ico,,1
 Menu Tray, Tip, PAKeymander
 Menu Tray, NoStandard
+Menu Tray, Add, Sounds, Sounds
+global playSounds := 1
+if ((A_Args.Length() > 0) && (A_Args[1] == "/silent"))
+	playSounds := 0
+if (playSounds == 1)
+	Menu Tray, Check, Sounds
 Menu Tray, Add, Suspend, HoldIt
 Menu Tray, Add, Exit, QuitIt
 global IdWin := "ahk_class indesign" 
@@ -198,8 +204,10 @@ SendPAKeys(keys) {
 	IfWinNotActive, %PaWin%,, WinActivate, %PaWin% ; Activate PA
 	Send %keys%
 	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% ; Activate InDesign
+	Sleep 500
 	WinWait, %PaWin%
-	SoundPlay, %A_ScriptDir%\click.wav
+	if (playSounds) 
+		SoundPlay, %A_ScriptDir%\ready.wav
 }
 
 ;--------------------------
@@ -207,8 +215,10 @@ SendPAKeys(keys) {
 SendPAClick(buttonid, mods=0) {
 	SendMessage 0x8001, %mods%, %buttonid%,, %PaWin%
 	IfWinNotActive, %IdWin%,, WinActivate, %IdWin% ; Activate InDesign
+	Sleep 500
 	WinWait, %PaWin%
-	SoundPlay, %A_ScriptDir%\click.wav
+	if (playSounds) 
+		SoundPlay, %A_ScriptDir%\ready.wav
 }
 
 ;--------------------------
@@ -309,3 +319,9 @@ return
 QuitIt:
 ExitApp
 
+Sounds:
+playSounds := 1 - playSounds
+if (playSounds)
+	Menu Tray, Check, Sounds
+else
+	Menu Tray, Uncheck, Sounds
