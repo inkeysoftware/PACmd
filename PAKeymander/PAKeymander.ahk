@@ -11,7 +11,7 @@ Version = 0.1.3
 ; Initialization
 ;========================== 
 global PaWin := "Publishing Assistant ahk_class WindowsForms10.Window.8.app.0.13965fa_r6_ad1"
-PaWinDebug := "ahk_class Notepad"
+PaWinDebug := "Publishing Assistant ahk_class WindowsForms10.Window.8.app.0.13965fa_r8_ad1"
 if ((not WinExist(PaWin)) and WinExist(PaWinDebug)) 
 	PaWin := PaWinDebug
 Menu Tray, Icon, %A_ScriptDir%\PAKey128.ico,,1
