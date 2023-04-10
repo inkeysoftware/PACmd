@@ -1,6 +1,6 @@
 INSTALLATION:
 
-1. Clone this repository into your Scripts Panel folder.
+1. Unzip these files and folders into your Scripts Panel folder.
 
    e.g. C:\Program Files\Adobe\Adobe InDesign 2022\Scripts\Scripts Panel
 
@@ -12,8 +12,4 @@ INSTALLATION:
 
    Start InDesign, go to Edit > Keyboard Shortcuts, and select the PAKeymander set.
       
-3. Install AutoHotKey.
-
-4. Double-click on Scripts Panel\PAKey\non-script\PA7Keymander.ahk
-
-5. To get the latest updates, pull from the repo.
+3. Double-click on Scripts Panel\PAKey\PAKeymander\RunPAKey.bat

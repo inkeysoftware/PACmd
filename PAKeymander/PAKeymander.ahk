@@ -1,8 +1,8 @@
 ; PA Keymander, for PA7, to run Publishing Assistant from the keyboard.
 ;======================================================================
 
-Version = 0.1.3
-;@Ahk2Exe-SetVersion 0.0.1.3
+Version = 0.1.4
+;@Ahk2Exe-SetVersion 0.0.1.4
 ;@Ahk2Exe-SetName PAKeymander
 ;@Ahk2Exe-SetProductName PAKeymander
 ;@Ahk2Exe-SetMainIcon PAKey128.ico
@@ -10,7 +10,7 @@ Version = 0.1.3
 ;========================== 
 ; Initialization
 ;========================== 
-global PaWin := "Publishing Assistant ahk_class WindowsForms10.Window.8.app.0.13965fa_r6_ad1"
+global PaWin := "Publishing Assistant ahk_exe PublishingAssistant.exe"
 PaWinDebug := "ahk_class Notepad"
 if ((not WinExist(PaWin)) and WinExist(PaWinDebug)) 
 	PaWin := PaWinDebug

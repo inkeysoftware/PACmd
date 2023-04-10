@@ -1,1 +1,1 @@
-start autohotkey.exe PAKeymander.ahk /silent
+start autohotkey.exe PAKeymander.ahk
